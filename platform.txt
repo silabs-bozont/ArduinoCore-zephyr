@@ -178,6 +178,30 @@ tools.openocd.bootloader.params.verbose=-d2
 tools.openocd.bootloader.params.quiet=-d0
 tools.openocd.bootloader.pattern="{path}/{cmd}" {bootloader.verbose} -s "{path}/share/openocd/scripts/" {bootloader.programmer} {upload.transport} {bootloader.config} -c "telnet_port disabled; init; reset init; halt; adapter speed 10000; {bootloader.extra_action.preflash}; program {{runtime.platform.path}/bootloaders/{bootloader.file}}; reset run; shutdown"
 
+
+#
+# OpenOCD (Silabs)
+#
+tools.sl_openocd.path={runtime.tools.openocd-0.12.0-arduino1-static.path}
+tools.sl_openocd.cmd={path}/bin/openocd
+
+tools.sl_openocd.upload.params.verbose=-d2
+tools.sl_openocd.upload.params.quiet=-d0
+tools.sl_openocd.upload.pattern="{cmd}" {upload.verbose} -s "{path}/share/openocd/scripts/" -f interface/cmsis-dap.cfg -f target/efm32s2_g23.cfg -c "init; reset_config srst_nogate; reset halt; flash write_image erase {{build.path}/{build.project_name}.elf-zsk.bin} {upload.address} bin; reset; exit"
+
+tools.sl_openocd.program.params.verbose=-d2
+tools.sl_openocd.program.params.quiet=-d0
+tools.sl_openocd.program.pattern="{cmd}" {program.verbose} -s "{path}/share/openocd/scripts/" -f interface/cmsis-dap.cfg -f target/efm32s2_g23.cfg -c "init; reset_config srst_nogate; reset halt; flash write_image erase {{build.path}/{build.project_name}.elf-zsk.bin} {upload.address} bin; reset; exit"
+
+tools.sl_openocd.erase.params.verbose=-d2
+tools.sl_openocd.erase.params.quiet=-d0
+tools.sl_openocd.erase.pattern="{cmd}" {erase.verbose} -s "{path}/share/openocd/scripts/" -f interface/cmsis-dap.cfg -f target/efm32s2_g23.cfg -c "init; reset_config srst_nogate; reset halt; flash erase_sector 0 1 last; exit"
+
+tools.sl_openocd.bootloader.params.verbose=-d2
+tools.sl_openocd.bootloader.params.quiet=-d0
+tools.sl_openocd.bootloader.pattern="{cmd}" {bootloader.verbose} -s "{path}/share/openocd/scripts/" -f interface/cmsis-dap.cfg -f target/efm32s2_g23.cfg -c "init; reset_config srst_nogate; reset halt; program {{runtime.platform.path}/firmwares/{bootloader.file}}; reset; exit"
+
+
 #
 # BOSSA
 #
@@ -327,7 +351,7 @@ tools.gdb.path={runtime.tools.arm-none-eabi-gcc-7-2017q4.path}/bin/
 tools.gdb.cmd=arm-none-eabi-gdb
 tools.gdb.cmd.windows=arm-none-eabi-gdb.exe
 
-debug.executable={build.path}/{build.project_name}.elf
+debug.executable={build.path}/{build.project_name}_debug.elf
 debug.toolchain=gcc
 debug.toolchain.path={runtime.tools.arm-none-eabi-gcc-7-2017q4.path}/bin/
 debug.toolchain.prefix=arm-none-eabi
@@ -342,3 +366,6 @@ debug.cortex-debug.custom.postAttachCommands.3=c
 debug.cortex-debug.custom.overrideRestartCommands.0=monitor reset halt
 debug.cortex-debug.custom.overrideRestartCommands.1=monitor gdb_sync
 debug.cortex-debug.custom.overrideRestartCommands.2=c
+
+debug.server.openocd.path={runtime.tools.openocd-0.12.0-arduino1-static.path}/bin/openocd
+debug.server.openocd.scripts_dir={runtime.tools.openocd-0.12.0-arduino1-static.path}/share/openocd/scripts/

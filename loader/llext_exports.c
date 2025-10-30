@@ -8,9 +8,15 @@
 #include <math.h>
 #include <zephyr/kernel.h>
 
+#include <zephyr/sys/sys_heap.h>
+
 #define FORCE_EXPORT_SYM(name) \
        extern void name(void); \
        EXPORT_SYMBOL(name);
+
+extern struct k_heap _system_heap;
+EXPORT_SYMBOL(_system_heap);
+// EXPORT_SYMBOL(sys_heap_runtime_stats_get);
 
 EXPORT_SYMBOL(strrchr);
 EXPORT_SYMBOL(strstr);
@@ -65,7 +71,7 @@ EXPORT_SYMBOL(usb_enable);
 EXPORT_SYMBOL(usb_disable);
 #endif
 
-EXPORT_SYMBOL(z_log_msg_runtime_vcreate);
+//EXPORT_SYMBOL(z_log_msg_runtime_vcreate);
 
 FORCE_EXPORT_SYM(log_dynamic_sketch)
 

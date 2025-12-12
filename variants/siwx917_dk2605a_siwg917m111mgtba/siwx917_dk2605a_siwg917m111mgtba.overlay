@@ -1,0 +1,33 @@
+&flash0 {
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		code_partition: partition@0 {
+			reg = <0x00000000 0x00040000>;
+			label = "code_partition";
+		};
+
+		user_sketch: partition@0x40000 {
+			reg = <0x00040000 0x001B2000>;
+			label = "user";
+		};
+	};
+};
+
+/ {
+	zephyr,user {
+		digital-pin-gpios = <&gpioa 15 0>, /* D0 */
+				<&gpiod 2 0>, /* D1 */
+				<&gpiod 3 0>; /* D2 */
+
+		builtin-led-gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
+
+		serials = <&ulpuart>;
+	};
+};
+
+&ulpuart {
+	status = "okay";
+};

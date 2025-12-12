@@ -656,3 +656,66 @@ unoq.bootloader.file=zephyr-{build.variant}.elf
 unoq.bootloader.target=stm32u585zitxq
 
 ##########################################################################################
+
+silabs_si917_devkit.name=Silicon Labs Si917 Dev Kit
+silabs_si917_devkit.build.core=arduino
+silabs_si917_devkit.build.crossprefix=arm-zephyr-eabi-
+silabs_si917_devkit.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.16.8.path}/bin/
+
+silabs_si917_devkit.menu.debug.false=Standard
+silabs_si917_devkit.menu.debug.true=Debug
+silabs_si917_devkit.menu.debug.true.build.zsk_args.debug=-debug
+
+silabs_si917_devkit.menu.link_mode.dynamic=Dynamic
+silabs_si917_devkit.menu.link_mode.static=Static
+silabs_si917_devkit.menu.link_mode.static.build.link_mode=static
+silabs_si917_devkit.menu.link_mode.static.upload.extension=bin-zsk.bin
+
+silabs_si917_devkit.build.zephyr_target=siwx917_dk2605a
+silabs_si917_devkit.build.zephyr_args=
+silabs_si917_devkit.build.zephyr_hals=hal_silabs
+silabs_si917_devkit.build.variant=siwx917_dk2605a_siwg917m111mgtba
+silabs_si917_devkit.build.mcu=cortex-m4
+silabs_si917_devkit.build.fpu=-mfpu=fpv4-sp-d16
+silabs_si917_devkit.build.architecture=cortex-m4
+
+silabs_si917_devkit.build.float-abi=-mfloat-abi=hard
+silabs_si917_devkit.build.extra_flags=
+silabs_si917_devkit.build.postbuild.cmd="{tools.imgtool.path}/{tools.imgtool.cmd}" exit
+silabs_si917_devkit.build.architecture=cortex-m4
+silabs_si917_devkit.build.board=SILABS_SI917_DEVKIT
+
+silabs_si917_devkit.upload.tool=simplicitycommander
+silabs_si917_devkit.upload.tool.default=simplicitycommander
+silabs_si917_devkit.upload.maximum_data_size=262144
+silabs_si917_devkit.upload.maximum_size=1572864
+silabs_si917_devkit.upload.address=0x080C4000
+silabs_si917_devkit.upload.protocol=SWD
+silabs_si917_devkit.upload.setup_command=
+silabs_si917_devkit.upload.use_1200bps_touch=false
+silabs_si917_devkit.upload.wait_for_upload_port=false
+silabs_si917_devkit.upload.native_usb=false
+
+silabs_si917_devkit.bootloader.tool=simplicitycommander
+silabs_si917_devkit.bootloader.tool.default=simplicitycommander
+silabs_si917_devkit.bootloader.interface=0
+silabs_si917_devkit.bootloader.file=zephyr-{build.variant}.rps
+silabs_si917_devkit.bootloader.target=siwx917_dk2605a_siwg917m111mgtba
+
+### Postbuild action (binary conversion)
+########################################
+
+# The Si917 cannot write to its flash without erasing what's there - so we cannot upload the loader separately because flashing the app deletes it
+# So here's the workaround:
+
+# Combine the compiled app together with the loader
+# The loader is an elf - it has the right flash addresses
+# The compiled app is a bin with no baked in addresses - we append it to the elf at the address 0x8242000
+# The address is the absolute location of the user_sketch partition - 0x8202000 (flash start) + 0x40000 (user_sketch offset)
+silabs_si917_devkit.build.postbuild_action_3=arm-none-eabi-objcopy --add-section user_sketch={build.path}/{build.project_name}.bin-zsk.bin --set-section-flags user_sketch=alloc,load,readonly,data --change-section-address user_sketch=0x8242000 {runtime.platform.path}/firmwares/zephyr-siwx917_dk2605a_siwg917m111mgtba.elf {build.path}/merged.elf
+
+# We convert the combined elf to an RPS file so the Si917 can eat it
+silabs_si917_devkit.build.postbuild_action_4={tools.simplicitycommander.path}/{tools.simplicitycommander.cmd} rps create {build.path}/{build.project_name}.rps --app {build.path}/merged.elf
+
+# We convert the RPS back to hex
+silabs_si917_devkit.build.postbuild_action_5={tools.simplicitycommander.path}/{tools.simplicitycommander.cmd} convert {build.path}/{build.project_name}.rps -o {build.path}/{build.project_name}.hex

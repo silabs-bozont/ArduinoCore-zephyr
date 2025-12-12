@@ -144,6 +144,12 @@ recipe.size.regex=^(?:\.data|\.text|\.rodata)\S*?\s+([0-9]+).*
 recipe.output.tmp_file={build.project_name}.{upload.extension}
 recipe.output.save_file={build.project_name}.{build.variant}.{upload.extension}
 
+## Postbuild processing
+## ToDo: this probably breaks other boards - check and workaround if needed
+recipe.hooks.objcopy.postobjcopy.3.pattern={build.postbuild_action_3}
+recipe.hooks.objcopy.postobjcopy.4.pattern={build.postbuild_action_4}
+recipe.hooks.objcopy.postobjcopy.5.pattern={build.postbuild_action_5}
+
 
 # Required discoveries and monitors
 # ---------------------------------
@@ -154,6 +160,32 @@ pluggable_monitor.required.serial=builtin:serial-monitor
 
 # Uploader tools
 # --------------
+
+#
+# Silicon Labs Simplicity Commander
+#
+
+tools.simplicitycommander.path={runtime.tools.simplicitycommander.path}
+tools.simplicitycommander.cmd.macosx=Commander.app/Contents/MacOS/commander
+tools.simplicitycommander.cmd.windows=commander.exe
+tools.simplicitycommander.cmd.linux=commander
+
+tools.simplicitycommander.upload.params.verbose=-v
+tools.simplicitycommander.upload.params.quiet=
+tools.simplicitycommander.upload.pattern="{path}/{cmd}" flash {build.path}/{build.project_name}.hex --identifybyserialport {serial.port} {upload.verbose}
+
+tools.simplicitycommander.program.params.verbose=-v
+tools.simplicitycommander.program.params.quiet=
+tools.simplicitycommander.program.pattern="{path}/{cmd}" flash {build.path}/{build.project_name}.hex --identifybyserialport {serial.port} {program.verbose}
+
+tools.simplicitycommander.erase.params.verbose=-v
+tools.simplicitycommander.erase.params.quiet=
+tools.simplicitycommander.erase.pattern="{path}/{cmd}" device masserase --identifybyserialport {serial.port} {erase.verbose}
+
+tools.simplicitycommander.bootloader.params.verbose=-v
+tools.simplicitycommander.bootloader.params.quiet=
+tools.simplicitycommander.bootloader.pattern="{path}/{cmd}" flash "{runtime.platform.path}/firmwares/{bootloader.file}" --identifybyserialport {serial.port} {bootloader.verbose}
+
 
 #
 # OpenOCD
@@ -269,12 +301,12 @@ tools.remoteocd.path={runtime.tools.remoteocd.path}
 tools.remoteocd.cmd=remoteocd
 tools.remoteocd.upload.params.verbose=--verbose
 tools.remoteocd.upload.params.quiet=
-tools.remoteocd.upload.pattern="{path}/{cmd}" upload --adb-path "{runtime.tools.adb.path}/adb" -s "{upload.port.properties.serialNumber}" -f "{build.variant.path}/{openocd_cfg}" "{upload.verbose}" "{build.path}/{build.project_name}.{upload.extension}" 
+tools.remoteocd.upload.pattern="{path}/{cmd}" upload --adb-path "{runtime.tools.adb.path}/adb" -s "{upload.port.properties.serialNumber}" -f "{build.variant.path}/{openocd_cfg}" "{upload.verbose}" "{build.path}/{build.project_name}.{upload.extension}"
 
 tools.remoteocd.bootloader.params.verbose=--verbose
 tools.remoteocd.bootloader.params.quiet=
 tools.remoteocd.erase.pattern=
-tools.remoteocd.bootloader.pattern="{path}/{cmd}" upload --adb-path "{runtime.tools.adb.path}/adb" -s "{upload.port.properties.serialNumber}" -f "{build.variant.path}/flash_bootloader.cfg" "{upload.verbose}" "{runtime.platform.path}/firmwares/{bootloader.file}" 
+tools.remoteocd.bootloader.pattern="{path}/{cmd}" upload --adb-path "{runtime.tools.adb.path}/adb" -s "{upload.port.properties.serialNumber}" -f "{build.variant.path}/flash_bootloader.cfg" "{upload.verbose}" "{runtime.platform.path}/firmwares/{bootloader.file}"
 
 tools.remoteocd_network.upload.protocol=network
 tools.remoteocd_network.upload.field.password=Password
@@ -283,7 +315,7 @@ tools.remoteocd_network.path={runtime.tools.remoteocd.path}
 tools.remoteocd_network.cmd=remoteocd
 tools.remoteocd_network.upload.params.verbose=--verbose
 tools.remoteocd_network.upload.params.quiet=
-tools.remoteocd_network.upload.pattern="{path}/{cmd}" upload -a "{upload.port.address}" --password "{upload.field.password}" -f "{build.variant.path}/{openocd_cfg}" "{upload.verbose}" "{build.path}/{build.project_name}.{upload.extension}" 
+tools.remoteocd_network.upload.pattern="{path}/{cmd}" upload -a "{upload.port.address}" --password "{upload.field.password}" -f "{build.variant.path}/{openocd_cfg}" "{upload.verbose}" "{build.path}/{build.project_name}.{upload.extension}"
 
 #
 # PYOCD WRAPPER

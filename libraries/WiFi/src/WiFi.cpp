@@ -1,5 +1,8 @@
 #include "WiFi.h"
 
+#include <Arduino.h>
+
+
 WiFiClass WiFi;
 
 String WiFiClass::firmwareVersion() {
@@ -23,9 +26,11 @@ int WiFiClass::begin(const char *ssid, const char *passphrase, wl_enc_type secur
 	sta_config.channel = WIFI_CHANNEL_ANY;
 	sta_config.band = WIFI_FREQ_BAND_2_4_GHZ;
 	sta_config.bandwidth = WIFI_FREQ_BANDWIDTH_20MHZ;
+	sta_config.mfp = WIFI_MFP_OPTIONAL;
 	int ret = net_mgmt(NET_REQUEST_WIFI_CONNECT, sta_iface, &sta_config,
 					   sizeof(struct wifi_connect_req_params));
 	if (ret) {
+		//Serial.println(ret);
 		return false;
 	}
 
@@ -68,8 +73,14 @@ bool WiFiClass::beginAP(char *ssid, char *passphrase, int channel, bool blocking
 int WiFiClass::status() {
 	sta_iface = net_if_get_wifi_sta();
 	netif = sta_iface;
-	if (net_mgmt(NET_REQUEST_WIFI_IFACE_STATUS, netif, &sta_state,
-				 sizeof(struct wifi_iface_status))) {
+	if (!netif) {
+		//Serial.println("No STA interface");
+	}
+	int ret = net_mgmt(NET_REQUEST_WIFI_IFACE_STATUS, netif, &sta_state,
+				 sizeof(struct wifi_iface_status));
+	//Serial.println(ret);
+
+	if (ret) {
 		return WL_NO_SHIELD;
 	}
 	if (sta_state.state >= WIFI_STATE_ASSOCIATED) {

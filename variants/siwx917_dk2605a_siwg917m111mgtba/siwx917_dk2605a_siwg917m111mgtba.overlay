@@ -25,9 +25,24 @@
 		builtin-led-gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
 
 		serials = <&ulpuart>;
+		i2cs = <&ulpi2c>;
 	};
 };
 
 &ulpuart {
 	status = "okay";
+};
+
+zephyr_i2c: &ulpi2c {
+	status = "okay";
+};
+
+&wifi0 {
+	status = "okay";
+};
+
+/ {
+    chosen {
+        zephyr,wifi = &wifi0;
+    };
 };

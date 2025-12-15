@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later
  */
 
+#include <Arduino.h>
 #include "WiFi.h"
 
 #include <errno.h>
@@ -116,6 +117,7 @@ int WiFiClass::begin(const char *ssid, const char *passphrase, wl_enc_type secur
 	/* security will be updated in case of ENC_TYPE_UNKNOWN in handleScanResult when the network is
 	 * found during scanning */
 	wifiState.sta_config.security = wifi_security;
+	wifiState.sta_config.mfp = WIFI_MFP_OPTIONAL;
 
 	if (!net_if_is_up(netif)) {
 		net_if_up(netif);
@@ -142,6 +144,7 @@ int WiFiClass::begin(const char *ssid, const char *passphrase, wl_enc_type secur
 	int ret = net_mgmt(NET_REQUEST_WIFI_CONNECT, wifiState.sta_iface, &wifiState.sta_config,
 					   sizeof(struct wifi_connect_req_params));
 	if (ret) {
+		//Serial.println(ret);
 		return false;
 	}
 
@@ -225,8 +228,11 @@ int WiFiClass::status() {
 		netif = wifiState.sta_iface;
 	}
 
-	if (net_mgmt(NET_REQUEST_WIFI_IFACE_STATUS, netif, &if_status,
-				 sizeof(struct wifi_iface_status))) {
+	int ret = net_mgmt(NET_REQUEST_WIFI_IFACE_STATUS, netif, &if_status,
+				 sizeof(struct wifi_iface_status));
+	//Serial.println(ret);
+
+	if (ret) {
 		return WL_NO_SHIELD;
 	}
 

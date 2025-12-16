@@ -18,9 +18,14 @@
 
 / {
 	zephyr,user {
-		digital-pin-gpios = <&gpioa 15 0>, /* D0 */
-				<&gpiod 2 0>, /* D1 */
-				<&gpiod 3 0>; /* D2 */
+		digital-pin-gpios = <&gpioa 15 0>, /* D0 - Blue LED */
+				<&gpiod 2 0>, /* D1 - Red LED */
+				<&gpiod 3 0>, /* D2 - Green LED */
+
+				<&ulpgpio 1 0>, /* D3 - SPI MOSI */
+				<&ulpgpio 2 0>, /* D4 - SPI MISO */
+				<&ulpgpio 8 0>, /* D5 - SPI SCK */
+				<&ulpgpio 10 0>; /* D6 - SPI CS */
 
 		builtin-led-gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
 
@@ -41,8 +46,13 @@ zephyr_i2c: &ulpi2c {
 	status = "okay";
 };
 
+&rtc0 {
+	status = "okay";
+};
+
 / {
     chosen {
         zephyr,wifi = &wifi0;
+		zephyr,rtc = &rtc0;
     };
 };

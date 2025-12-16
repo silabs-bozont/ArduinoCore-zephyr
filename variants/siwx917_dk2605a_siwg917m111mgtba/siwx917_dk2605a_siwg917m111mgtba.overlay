@@ -25,7 +25,10 @@
 				<&ulpgpio 1 0>, /* D3 - SPI MOSI */
 				<&ulpgpio 2 0>, /* D4 - SPI MISO */
 				<&ulpgpio 8 0>, /* D5 - SPI SCK */
-				<&ulpgpio 10 0>; /* D6 - SPI CS */
+				<&ulpgpio 10 0>, /* D6 - SPI CS */
+
+				<&uulpgpio 2 GPIO_ACTIVE_LOW>, /* D7 - Button 0 */
+				<&gpiod 1 GPIO_ACTIVE_LOW>; /* D8 - Button 1 */
 
 		builtin-led-gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
 

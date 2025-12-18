@@ -126,9 +126,9 @@ int arduino::ZephyrSerial::available() {
 int arduino::ZephyrSerial::availableForWrite() {
 	int ret;
 
-	k_sem_take(&rx.sem, K_FOREVER);
-	ret = ring_buf_space_get(&rx.ringbuf);
-	k_sem_give(&rx.sem);
+	k_sem_take(&tx.sem, K_FOREVER);
+	ret = ring_buf_space_get(&tx.ringbuf);
+	k_sem_give(&tx.sem);
 
 	return ret;
 }
@@ -154,8 +154,15 @@ int arduino::ZephyrSerial::read() {
 }
 
 size_t arduino::ZephyrSerial::write(const uint8_t *buffer, size_t size) {
-	size_t idx = 0;
+	#ifdef ARDUINO_SILABS_SI917_DEVKIT
 
+	for (size_t i = 0; i < size; i++) {
+		uart_poll_out(uart, buffer[i]);
+	}
+
+	#else
+
+	size_t idx = 0;
 	while (1) {
 		k_sem_take(&tx.sem, K_FOREVER);
 		auto ret = ring_buf_put(&tx.ringbuf, &buffer[idx], size - idx);
@@ -174,6 +181,8 @@ size_t arduino::ZephyrSerial::write(const uint8_t *buffer, size_t size) {
 	}
 
 	uart_irq_tx_enable(uart);
+
+	#endif
 
 	return size;
 }

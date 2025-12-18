@@ -18,17 +18,34 @@
 
 / {
 	zephyr,user {
-		digital-pin-gpios = <&gpioa 15 0>, /* D0 - Blue LED */
-				<&gpiod 2 0>, /* D1 - Red LED */
-				<&gpiod 3 0>, /* D2 - Green LED */
+		digital-pin-gpios =
+				<&ulpgpio 1 0>,  /* ULP_GPIO_1  - D0 - SPI MOSI */
+				<&ulpgpio 2 0>,  /* ULP_GPIO_2  - D1 - SPI MISO */
+				<&ulpgpio 8 0>,  /* ULP_GPIO_8  - D2 - SPI SCK */
+				<&ulpgpio 10 0>, /* ULP_GPIO_10 - D3 - SPI CS */
+				<&ulpgpio 11 0>, /* ULP_GPIO_11 - D4 */
+				<&ulpgpio 9 0>,  /* ULP_GPIO_9  - D5 */
+				<&ulpgpio 6 0>,  /* ULP_GPIO_6  - D6 - I2C SDA */
+				<&gpioa 11 0>,   /* GPIO_11     - D7 */
+				<&gpioa 7 0>,    /* GPIO_7      - D8 */
 
-				<&ulpgpio 1 0>, /* D3 - SPI MOSI */
-				<&ulpgpio 2 0>, /* D4 - SPI MISO */
-				<&ulpgpio 8 0>, /* D5 - SPI SCK */
-				<&ulpgpio 10 0>, /* D6 - SPI CS */
+				<&gpiob 9 0>,   /* GPIO_25    - D9 */
+				<&gpiob 10 0>,  /* GPIO_26    - D10 */
+				<&gpiob 11 0>,  /* GPIO_27    - D11 */
+				<&gpiob 12 0>,  /* GPIO_28    - D12 */
+				<&gpiob 13 0>,  /* GPIO_29    - D13 */
+				<&gpiob 14 0>,  /* GPIO_30    - D14 */
+				<&ulpgpio 7 0>, /* ULP_GPIO_7 - D15 - I2C SCL */
+				<&gpioa 6 0>,   /* GPIO_6     - D16 */
+				<&gpioa 10 0>,  /* GPIO_10    - D17 */
+				<&gpioa 12 0>,  /* GPIO_12    - D18 */
 
-				<&uulpgpio 2 GPIO_ACTIVE_LOW>, /* D7 - Button 0 */
-				<&gpiod 1 GPIO_ACTIVE_LOW>; /* D8 - Button 1 */
+				<&gpioa 15 0>, /* GPIO_15 - D19 - Blue LED */
+				<&gpiod 2 0>,  /* GPIO_50 - D20 - Red LED */
+				<&gpiod 3 0>,  /* GPIO_51 - D21 - Green LED */
+
+				<&uulpgpio 2 GPIO_ACTIVE_LOW>, /* UULP_GPIO_2 - D22 - Button 0 */
+				<&gpiod 1 GPIO_ACTIVE_LOW>;    /* GPIO_49     - D23 - Button 1 */
 
 		builtin-led-gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
 

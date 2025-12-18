@@ -195,6 +195,15 @@ void arduino::ZephyrSerial::flush() {
 	}
 }
 
+void arduino::ZephyrSerial::printf(const char *fmt, ...) {
+  char message[this->printf_buffer_size];
+  va_list args;
+  va_start(args, fmt);
+  vsnprintf(message, sizeof(message), fmt, args);
+  va_end(args);
+  this->write((uint8_t*)message, strlen(message));
+}
+
 #if DT_NODE_HAS_PROP(DT_PATH(zephyr_user), serials)
 #define DEFINE_SERIAL_N(n, p, i)                                                                   \
 	arduino::ZephyrSerial ZARD_SERIAL_NAME(i)(DEVICE_DT_GET(DT_PHANDLE_BY_IDX(n, p, i)));

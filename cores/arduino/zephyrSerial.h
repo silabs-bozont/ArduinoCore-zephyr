@@ -88,6 +88,7 @@ public:
 	int availableForWrite();
 	int peek();
 	int read();
+	void printf(const char *fmt, ...);
 
 	operator bool() {
 		return true;
@@ -102,6 +103,7 @@ protected:
 	const struct device *uart;
 	ZephyrSerialBuffer<CONFIG_ARDUINO_API_SERIAL_BUFFER_SIZE> tx;
 	ZephyrSerialBuffer<CONFIG_ARDUINO_API_SERIAL_BUFFER_SIZE> rx;
+	const size_t printf_buffer_size = 128u;
 };
 
 } // namespace arduino

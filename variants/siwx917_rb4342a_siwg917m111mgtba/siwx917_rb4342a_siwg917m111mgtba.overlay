@@ -19,11 +19,35 @@
 / {
 	zephyr,user {
 		digital-pin-gpios =
-				<&gpiob 12 0>, /* GPIO_28 - Dxx - Red LED */
-				<&gpiob 11 0>, /* GPIO_27 - Dxx - Blue LED */
-				<&gpiob 10 0>; /* GPIO_26 - Dxx - Green LED */
+				<&ulpgpio 2 0>, /* ULP_GPIO_2 - D0 - ULP UART Rx */
+				<&ulpgpio 7 0>, /* ULP_GPIO_7 - D1 - ULP UART Tx */
+				<&gpiod 9 0>,   /* GPIO_57    - D2 */
+				<&gpioa 7 0>,   /* GPIO_7     - D3 */
+				<&gpiod 8 0>,   /* GPIO_56    - D4 */
+				<&gpioa 12 0>,  /* GPIO_12    - D5 */
+				<&gpioa 15 0>,  /* GPIO_15    - D6 */
+				<&gpiod 5 0>,   /* GPIO_53    - D7 */
+				<&gpiod 4 0>,   /* GPIO_52    - D8 */
+				<&gpioa 10 0>,  /* GPIO_10    - D9 */
+				<&gpioa 9 0>,   /* GPIO_9     - D10 - SPI CS */
+				<&gpioa 6 0>,   /* GPIO_6     - D11 - SPI MOSI */
+				<&gpioa 11 0>,  /* GPIO_11    - D12 - SPI MISO */
+				<&gpioa 8 0>,   /* GPIO_8     - D13 - SPI CLK */
 
-		builtin-led-gpios = <&gpiob 11 GPIO_ACTIVE_LOW>;
+				<&ulpgpio 4 0>,  /* ULP_GPIO_4   - 14 - A0 */
+				<&gpiob 9 0>,    /* GPIO_25      - 15 - A1 */
+				<&ulpgpio 10 0>, /* ULP_GPIO_10  - 16 - A2 */
+				<&ulpgpio 5 0>,  /* ULP_GPIO_5   - 17 - A3 */
+				<&ulpgpio 0 0>,  /* ULP_GPIO_0   - 18 - A4 - ULP I2C SDA - QWIIC */
+				<&ulpgpio 1 0>,  /* ULP_GPIO_1   - 19 - A5 - ULP I2C SCL - QWIIC */
+				<&ulpgpio 6 0>,  /* ULP_GPIO_6   - 20 - A6 */
+				<&ulpgpio 8 0>,  /* ULP_GPIO_8   - 21 - A7 */
+
+				<&gpiob 12 GPIO_ACTIVE_LOW>, /* GPIO_28 - 22 - Red LED */
+				<&gpiob 11 GPIO_ACTIVE_LOW>, /* GPIO_27 - 23 - Blue LED */
+				<&gpiob 10 GPIO_ACTIVE_LOW>; /* GPIO_26 - 24 - Green LED */
+
+		builtin-led-gpios = <&gpiob 10 GPIO_ACTIVE_LOW>;
 
 		serials = <&uart0>;
 		i2cs = <&ulpi2c>;
@@ -36,10 +60,10 @@
 		group0 {
 			/* GSPI on GPIO25 -> GPIO28 */
 			pinmux = <
-				GSPI_CLK_HP25
-				GSPI_MISO_HP26
-				GSPI_MOSI_HP27
-				GSPI_CS0_HP28
+				GSPI_CLK_HP8
+				GSPI_MISO_HP11
+				GSPI_MOSI_HP6
+				GSPI_CS0_HP9
 			>;
 		};
 	};

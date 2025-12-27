@@ -1,0 +1,103 @@
+&flash0 {
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		code_partition: partition@0 {
+			reg = <0x00000000 0x00040000>;
+			label = "code_partition";
+		};
+
+		user_sketch: partition@0x40000 {
+			reg = <0x00040000 0x001B2000>;
+			label = "user";
+		};
+	};
+};
+
+/ {
+	zephyr,user {
+		digital-pin-gpios =
+				<&gpiob 12 0>, /* GPIO_28 - Dxx - Red LED */
+				<&gpiob 11 0>, /* GPIO_27 - Dxx - Blue LED */
+				<&gpiob 10 0>; /* GPIO_26 - Dxx - Green LED */
+
+		builtin-led-gpios = <&gpiob 11 GPIO_ACTIVE_LOW>;
+
+		serials = <&uart0>;
+		i2cs = <&ulpi2c>;
+		spis = <&spi0>;
+	};
+};
+
+&pinctrl0 {
+	spi0_default: spi0_default {
+		group0 {
+			/* GSPI on GPIO25 -> GPIO28 */
+			pinmux = <
+				GSPI_CLK_HP25
+				GSPI_MISO_HP26
+				GSPI_MOSI_HP27
+				GSPI_CS0_HP28
+			>;
+		};
+	};
+
+	uart0_default: uart0_default {
+		group0 {
+			/* UART0 TX/RX on GPIO30/GPIO29 */
+			pinmux = <
+				UART0_TX_HP30
+				UART0_RX_HP29
+			>;
+		};
+	};
+
+	ulpi2c_default: ulpi2c_default {
+		group0 {
+			/* ULPI2C SCL/SDA */
+			pinmux = <
+				ULPI2C_SCL_ULP1
+				ULPI2C_SDA_ULP0
+			>;
+		};
+	};
+};
+
+&spi0 {
+	pinctrl-0 = <&spi0_default>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&uart0 {
+	pinctrl-0 = <&uart0_default>;
+	pinctrl-names = "default";
+	/delete-property/ hw-flow-control;
+	status = "okay";
+};
+
+zephyr_i2c: &ulpi2c {
+	pinctrl-0 = <&ulpi2c_default>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&wifi0 {
+	status = "okay";
+};
+
+&rtc0 {
+	status = "okay";
+};
+
+/ {
+    chosen {
+        zephyr,wifi = &wifi0;
+		zephyr,rtc = &rtc0;
+		zephyr,console = &uart0;
+		zephyr,shell-uart = &uart0;
+		zephyr,uart-pipe = &uart0;
+    };
+};

@@ -19,8 +19,8 @@
 / {
 	zephyr,user {
 		digital-pin-gpios =
-				<&ulpgpio 2 0>, /* ULP_GPIO_2 - D0 - ULP UART Rx */
-				<&ulpgpio 7 0>, /* ULP_GPIO_7 - D1 - ULP UART Tx */
+				<&ulpgpio 2 0>, /* ULP_GPIO_2 - D0 - Serial1 - ULP UART Rx */
+				<&ulpgpio 7 0>, /* ULP_GPIO_7 - D1 - Serial1 - ULP UART Tx */
 				<&gpiod 9 0>,   /* GPIO_57    - D2 */
 				<&gpioa 7 0>,   /* GPIO_7     - D3 */
 				<&gpiod 8 0>,   /* GPIO_56    - D4 */
@@ -49,7 +49,7 @@
 
 		builtin-led-gpios = <&gpiob 10 GPIO_ACTIVE_LOW>;
 
-		serials = <&uart0>;
+		serials = <&uart0>, <&ulpuart>;
 		i2cs = <&ulpi2c>;
 		spis = <&spi0>;
 	};
@@ -58,7 +58,7 @@
 &pinctrl0 {
 	spi0_default: spi0_default {
 		group0 {
-			/* GSPI on GPIO25 -> GPIO28 */
+			/* GSPI on GPIO6 -> GPIO11 */
 			pinmux = <
 				GSPI_CLK_HP8
 				GSPI_MISO_HP11
@@ -74,6 +74,16 @@
 			pinmux = <
 				UART0_TX_HP30
 				UART0_RX_HP29
+			>;
+		};
+	};
+
+	ulpuart_default: ulpuart_default {
+		group0 {
+			/* ULPUART TX/RX on ULPGPIO7/ULPGPIO2 */
+			pinmux = <
+				ULPUART_TX_ULP7
+				ULPUART_RX_ULP2
 			>;
 		};
 	};
@@ -99,6 +109,12 @@
 	pinctrl-0 = <&uart0_default>;
 	pinctrl-names = "default";
 	/delete-property/ hw-flow-control;
+	status = "okay";
+};
+
+&ulpuart {
+	pinctrl-0 = <&ulpuart_default>;
+	pinctrl-names = "default";
 	status = "okay";
 };
 

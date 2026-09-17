@@ -7,12 +7,15 @@
 #include <stdlib.h>
 
 namespace std {
+__attribute__((weak))
 void __throw_length_error(const char *__s __attribute__((unused))) {
 }
 
+__attribute__((weak))
 void __throw_bad_alloc() {
 }
 
+__attribute__((weak))
 void __throw_bad_function_call() {
 }
 }; // namespace std

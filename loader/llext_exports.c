@@ -15,9 +15,9 @@
 #include <zephyr/kernel.h>
 #include <time.h>
 #include <sys/time.h>
+#include <zephyr/sys/timeutil.h>
 #include <zephyr/drivers/pinctrl.h>
 #include <zephyr/device.h>
-#include <zephyr/posix/unistd.h>
 #if defined(CONFIG_MBEDTLS)
 #include <mbedtls/memory_buffer_alloc.h>
 #include <mbedtls/debug.h>
@@ -252,6 +252,7 @@ FORCE_EXPORT_SYM(bt_ctlr_set_public_addr);
 FORCE_EXPORT_SYM(__stack_chk_guard);
 FORCE_EXPORT_SYM(__stack_chk_fail);
 // Required by  __stack_chk_init()
+extern int getentropy(void *, size_t);
 EXPORT_LIBC_SYM(getentropy);
 #endif
 
@@ -351,6 +352,8 @@ EXPORT_LIBC_SYM(gettimeofday);
 EXPORT_SYMBOL(sys_clock_settime);
 EXPORT_SYMBOL(mktime);
 EXPORT_SYMBOL(gmtime);
+EXPORT_SYMBOL(timeutil_timegm);
+EXPORT_SYMBOL(timeutil_timegm64);
 
 /*
  * Export the v* forms under __real_ names. The sketch core (llext_wrappers.c)

@@ -4,13 +4,14 @@
 		#address-cells = <1>;
 		#size-cells = <1>;
 
-		code_partition: partition@0 {
-			reg = <0x00000000 0x00040000>;
-			label = "code_partition";
-		};
-
-		user_sketch: partition@0x40000 {
-			reg = <0x00040000 0x001B2000>;
+		/* Sketch lives in the MCU code region (code_partition @ 0x202000).
+		 * Offset must stay past the Zephyr loader image. With WiFi/hostap the
+		 * loader uses ~0x7f000 from the load base, so reserve 0x90000 (576 KiB)
+		 * for the loader: flash offset 0x202000 + 0x90000 = 0x292000.
+		 * Absolute address: 0x08000000 + 0x292000 = 0x08292000.
+		 * Ends at storage_partition (0x3f8000): size 0x166000 */
+		user_sketch: partition@292000 {
+			reg = <0x00292000 0x00166000>;
 			label = "user";
 		};
 	};

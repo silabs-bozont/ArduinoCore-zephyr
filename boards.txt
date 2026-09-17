@@ -738,7 +738,7 @@ ventunoq.bootloader.target=stm32h5f5xx
 silabs_si917_devkit.name=Silicon Labs Si917 Dev Kit
 silabs_si917_devkit.build.core=arduino
 silabs_si917_devkit.build.crossprefix=arm-zephyr-eabi-
-silabs_si917_devkit.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.16.8.path}/bin/
+silabs_si917_devkit.build.compiler_path={runtime.tools.arm-zephyr-eabi-1.0.1.path}/bin/
 
 silabs_si917_devkit.menu.debug.false=Standard
 silabs_si917_devkit.menu.debug.true=Debug
@@ -766,8 +766,8 @@ silabs_si917_devkit.build.board=SILABS_SI917_DEVKIT
 silabs_si917_devkit.upload.tool=simplicitycommander
 silabs_si917_devkit.upload.tool.default=simplicitycommander
 silabs_si917_devkit.upload.maximum_data_size=262144
-silabs_si917_devkit.upload.maximum_size=1572864
-silabs_si917_devkit.upload.address=0x080C4000
+silabs_si917_devkit.upload.maximum_size=1466368
+silabs_si917_devkit.upload.address=0x08292000
 silabs_si917_devkit.upload.protocol=SWD
 silabs_si917_devkit.upload.setup_command=
 silabs_si917_devkit.upload.use_1200bps_touch=false
@@ -788,9 +788,9 @@ silabs_si917_devkit.bootloader.target=siwx917_dk2605a_siwg917m111mgtba
 
 # Combine the compiled app together with the loader
 # The loader is an elf - it has the right flash addresses
-# The compiled app is a bin with no baked in addresses - we append it to the elf at the address 0x8242000
-# The address is the absolute location of the user_sketch partition - 0x8202000 (flash start) + 0x40000 (user_sketch offset)
-silabs_si917_devkit.build.postbuild_action_3=arm-none-eabi-objcopy --add-section user_sketch={build.path}/{build.project_name}.bin-zsk.bin --set-section-flags user_sketch=alloc,load,readonly,data --change-section-address user_sketch=0x8242000 {runtime.platform.path}/firmwares/zephyr-siwx917_dk2605a_siwg917m111mgtba.elf {build.path}/merged.elf
+# The compiled app is a bin with no baked in addresses - we append it to the elf at {upload.address}
+# (absolute user_sketch partition address from the variant overlay / boards.local.txt)
+silabs_si917_devkit.build.postbuild_action_3=arm-none-eabi-objcopy --add-section user_sketch={build.path}/{build.project_name}.bin-zsk.bin --set-section-flags user_sketch=alloc,load,readonly,data --change-section-address user_sketch={upload.address} {runtime.platform.path}/firmwares/zephyr-siwx917_dk2605a_siwg917m111mgtba.elf {build.path}/merged.elf
 
 # We convert the combined elf to an RPS file so the Si917 can eat it
 silabs_si917_devkit.build.postbuild_action_4={tools.simplicitycommander.path}/{tools.simplicitycommander.cmd} rps create {build.path}/{build.project_name}.rps --app {build.path}/merged.elf
@@ -804,7 +804,7 @@ silabs_si917_devkit.build.postbuild_action_5={tools.simplicitycommander.path}/{t
 silabs_nmw.name=Silicon Labs NMW Si917
 silabs_nmw.build.core=arduino
 silabs_nmw.build.crossprefix=arm-zephyr-eabi-
-silabs_nmw.build.compiler_path={runtime.tools.arm-zephyr-eabi-0.16.8.path}/bin/
+silabs_nmw.build.compiler_path={runtime.tools.arm-zephyr-eabi-1.0.1.path}/bin/
 
 silabs_nmw.menu.debug.false=Standard
 silabs_nmw.menu.debug.true=Debug
@@ -832,8 +832,8 @@ silabs_nmw.build.board=SILABS_NMW_SI917
 silabs_nmw.upload.tool=simplicitycommander
 silabs_nmw.upload.tool.default=simplicitycommander
 silabs_nmw.upload.maximum_data_size=262144
-silabs_nmw.upload.maximum_size=1572864
-silabs_nmw.upload.address=0x080C4000
+silabs_nmw.upload.maximum_size=1466368
+silabs_nmw.upload.address=0x08292000
 silabs_nmw.upload.protocol=SWD
 silabs_nmw.upload.setup_command=
 silabs_nmw.upload.use_1200bps_touch=false
@@ -854,9 +854,8 @@ silabs_nmw.bootloader.target=siwx917_rb4342a_siwg917m111mgtba
 
 # Combine the compiled app together with the loader
 # The loader is an elf - it has the right flash addresses
-# The compiled app is a bin with no baked in addresses - we append it to the elf at the address 0x8242000
-# The address is the absolute location of the user_sketch partition - 0x8202000 (flash start) + 0x40000 (user_sketch offset)
-silabs_nmw.build.postbuild_action_3=arm-none-eabi-objcopy --add-section user_sketch={build.path}/{build.project_name}.bin-zsk.bin --set-section-flags user_sketch=alloc,load,readonly,data --change-section-address user_sketch=0x8242000 {runtime.platform.path}/firmwares/zephyr-siwx917_rb4342a_siwg917m111mgtba.elf {build.path}/merged.elf
+# The compiled app is a bin with no baked in addresses - we append it to the elf at {upload.address}
+silabs_nmw.build.postbuild_action_3=arm-none-eabi-objcopy --add-section user_sketch={build.path}/{build.project_name}.bin-zsk.bin --set-section-flags user_sketch=alloc,load,readonly,data --change-section-address user_sketch={upload.address} {runtime.platform.path}/firmwares/zephyr-siwx917_rb4342a_siwg917m111mgtba.elf {build.path}/merged.elf
 
 # We convert the combined elf to an RPS file so the Si917 can eat it
 silabs_nmw.build.postbuild_action_4={tools.simplicitycommander.path}/{tools.simplicitycommander.cmd} rps create {build.path}/{build.project_name}.rps --app {build.path}/merged.elf

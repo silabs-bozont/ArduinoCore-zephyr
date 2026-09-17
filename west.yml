@@ -21,7 +21,7 @@ manifest:
   projects:
     - name: zephyr
       remote: arduino
-      revision: main
+      revision: zephyr-arduino-v4.4.1+
       import:
         name-allowlist:
           - cmsis

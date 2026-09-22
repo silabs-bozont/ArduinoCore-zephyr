@@ -829,8 +829,8 @@ silabs_nmw.build.postbuild.cmd="{tools.imgtool.path}/{tools.imgtool.cmd}" exit
 silabs_nmw.build.architecture=cortex-m4
 silabs_nmw.build.board=SILABS_NMW_SI917
 
-silabs_nmw.upload.tool=simplicitycommander
-silabs_nmw.upload.tool.default=simplicitycommander
+silabs_nmw.upload.tool=openocd
+silabs_nmw.upload.tool.default=openocd
 silabs_nmw.upload.maximum_data_size=262144
 silabs_nmw.upload.maximum_size=1466368
 silabs_nmw.upload.address=0x08292000
@@ -839,6 +839,11 @@ silabs_nmw.upload.setup_command=
 silabs_nmw.upload.use_1200bps_touch=false
 silabs_nmw.upload.wait_for_upload_port=false
 silabs_nmw.upload.native_usb=false
+
+# Development checkout containing the Si917 OpenOCD driver and flash script.
+# Override these in boards.local.txt when the checkout lives elsewhere.
+silabs_nmw.tools.openocd.path=/Users/tajozsi/siliconlabs/arduino/OpenOCD
+silabs_nmw.tools.openocd.upload.pattern="{path}/flash_si917.sh" "{build.path}/{build.project_name}.rps"
 
 silabs_nmw.bootloader.tool=simplicitycommander
 silabs_nmw.bootloader.tool.default=simplicitycommander
